@@ -9,7 +9,8 @@
 	</head>
 	<body>
 		<script src="js/three.js"></script>
-		<script src="js/OrbitControls.js"></script>
+		<script type="module" src="js/three.module.js"></script>
+		<script  src="js/OrbitControls.js"></script>
 		<script>
 			
 			window.addEventListener('load', init)
@@ -17,6 +18,7 @@
 			let camera
 			let renderer
 			let sceneObjects = []
+			let mesh
 
 			function init() {
 			scene = new THREE.Scene()
@@ -31,9 +33,9 @@
 			adjustLighting()
 			addBasicCube()
 			animationLoop()
-			}
+		}
 
-			function adjustLighting() {
+		function adjustLighting() {
 				let pointLight = new THREE.PointLight(0xffffff)
 				pointLight.position.set(50,100,100)
 				scene.add(pointLight)
@@ -43,29 +45,32 @@
 			}
 
 			function addBasicCube() {
+				
+				texture = new THREE.TextureLoader().load( "../images/dababy.jfif" );
 			
-			texture = new THREE.TextureLoader().load( "../images/mars.jpg" );
-			
-			let geometry = new THREE.SphereGeometry(5,32,32)
+				let geometry = new THREE.SphereGeometry(5,32,32)
 			material = new THREE.MeshLambertMaterial( { map: texture} ); 
-
-			let mesh = new THREE.Mesh(geometry, material)
+			
+			mesh = new THREE.Mesh(geometry, material)
 			mesh.position.x = 0
 			scene.add(mesh)
+			var controls = new THREE.OrbitControls(mesh, renderer.domElement);
 			sceneObjects.push(mesh)
 			}
-
+			
 			function animationLoop() {
-			renderer.render(scene, camera)
+				controls.update()
+				renderer.render(scene, camera)
 
-				camera.position.z = 20;
-			for(let object of sceneObjects) {
-				object.rotation.x += 0.01
-				object.rotation.y += 0.01
-				object.rotation.z += 0.01
-			}
+					camera.position.z = 20;
+				for(let object of sceneObjects) {
+					//object.rotation.x += 0.01
+					object.rotation.y += 0.01
+					object.rotation.z += 0.01
+				}
+				controls.target.set(0.1, -0.1, 0.1);
 
-			requestAnimationFrame(animationLoop)
+				requestAnimationFrame(animationLoop);
 			}
 
 		</script>

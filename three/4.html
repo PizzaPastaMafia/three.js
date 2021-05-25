@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<title>Driussi incredibile</title>
+<script src="js/three.min.js"></script>
+<script src="js/Curve.js"></script>
+<script src="js/OrbitControls.js"></script>
+</head>
+
+<body>
+<script>
+var parent, renderer, scene, camera, controls, pivot1, pivot2, pivot3;
+
+init();
+animate();
+
+function init() {
+
+    // info
+    info = document.createElement( 'div' );
+    info.style.position = 'absolute';
+    info.style.top = '30px';
+    info.style.width = '100%';
+    info.style.textAlign = 'center';
+    info.style.color = '#fff';
+    info.style.fontWeight = 'bold';
+    info.style.backgroundColor = 'transparent';
+    info.style.zIndex = '1';
+    info.style.fontFamily = 'Monospace';
+    info.innerHTML = 'Drag your cursor to rotate camera';
+    document.body.appendChild( info );
+
+    // renderer
+    renderer = new THREE.CanvasRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.physicallyBasedShading = true;
+    document.body.appendChild( renderer.domElement );
+
+    // scene
+    scene = new THREE.Scene();
+
+    // camera
+    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.1, 100 );
+    camera.position.set( 20, 20, 20 );
+
+    // controls
+    controls = new THREE.OrbitControls( camera );
+
+    // axes
+    scene.add( new THREE.AxisHelper( 20 ) );
+
+
+
+    var material = new THREE.LineBasicMaterial({color:0x000000, opacity:1});
+    var ellipse = new THREE.EllipseCurve(0, 0, 1, 4, 0, 2.0 * Math.PI, false);
+    var ellipsePath = new THREE.CurvePath();
+    ellipsePath.add(ellipse);
+    var ellipseGeometry = ellipsePath.createPointsGeometry(100);
+    ellipseGeometry.computeTangents();
+    var line = new THREE.Line(ellipseGeometry, material);
+    scene.add( line );
+}
+
+
+function animate() {
+    requestAnimationFrame( animate );
+    controls.update();
+    renderer.render( scene, camera );
+
+}
+
+</script>
+</body>
+</html>
