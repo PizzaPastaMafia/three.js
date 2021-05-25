@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Driussi magnifico</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+
+			renderer = new THREE.WebGLRenderer({ antialias: true});
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			//const texture = new THREE.TextureLoader().load( "pianeti/earth.jpg" );
+			
+			scene.background = new THREE.Color( 0x000000 );
+			
+            var light = new THREE.PointLight(0xF0F0F0);
+            light.position.set(-20, 20, 20);
+            scene.add(light);
+
+            var lightAmb = new THREE.AmbientLight(0x777777, 0.5);
+            scene.add(lightAmb);
+
+			const texture = new THREE.TextureLoader().load( "pianeti/earth.jpg" );
+
+			const texture2 = new THREE.TextureLoader().load( "pianeti/jupiter.jpg" );
+
+			const geometry = new THREE.SphereGeometry(6,32,32,0,6.3,0,3.3);
+			/*var material = new THREE.MeshLambertMaterial({
+				//color: 0xFF0000,
+				map: texture;
+                emissive: 0x121212
+            });*/
+
+			var material = new THREE.MeshBasicMaterial( { map: texture} );
+			const sphere = new THREE.Mesh( geometry, material );
+			scene.add( sphere );
+			
+			const geometry2 = new THREE.SphereGeometry(6,32,32,0,6.3,0,3.3);
+			var material2 = new THREE.MeshBasicMaterial( { map: texture2} );
+			/*var material2 = new THREE.MeshLambertMaterial({
+				color: 0xFF0000,
+                emissive: 0x121212
+            });*/
+			
+			const sphere2 = new THREE.Mesh( geometry2, material2 );
+			scene.add(sphere2);
+
+			sphere.position.x += 10;
+			sphere2.position.x -= 10;
+
+            const edges = new THREE.EdgesGeometry( geometry );
+            const line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+            //scene.add( line );
+
+			const edges2 = new THREE.EdgesGeometry( geometry2 );
+            const line2 = new THREE.LineSegments( edges2, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+            //scene.add( line2 );
+
+
+			const curve = new THREE.EllipseCurve(
+				0,  0,            // ax, aY
+				30, 10,           // xRadius, yRadius
+				0,  2 * Math.PI,  // aStartAngle, aEndAngle
+				false,            // aClockwise
+				0                 // aRotation
+			);
+
+			const points = curve.getPoints( 50 );
+			const geometry3 = new THREE.BufferGeometry().setFromPoints( points );
+
+			const material3 = new THREE.LineBasicMaterial( { color : 0x6b6b6b } );
+			
+
+			// Create the final object to add to the scene
+			const ellipse = new THREE.Line( geometry3, material3 );
+
+			scene.add( ellipse );
+
+			ellipse.rotation.x += 30;
+			line.position.x += 10;
+			line2.position.x -= 10;
+
+			camera.position.z = 20;
+
+			const animate = function () {
+				requestAnimationFrame( animate );
+
+				sphere.rotation.x += 0.000;
+				sphere.rotation.y += 0.001;
+                sphere2.rotation.x -= 0.000;
+				sphere2.rotation.y -= 0.001;
+				
+				renderer.render( scene, camera );
+			};
+
+
+			function onWindowResize(){
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			}
+
+			window.addEventListener('resize', onWindowResize, false);
+			animate();
+		</script>
+	</body>
+</html>
