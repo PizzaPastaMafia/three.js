@@ -225,6 +225,19 @@ function init(){
 
     neptune.position.x = 1090;
 
+    // TESLA
+
+    // var tesla = new THREE.GLTFLoader();
+    // tesla.load( '../models/TeslaSpace.gltf', function ( gltf ) {
+    //     var object = gltf.scene;
+    //     gltf.scene.scale.set( 0.5, 0.5, 0.5 );			   
+    //     gltf.scene.position.x = 0;				    //Position (x = right+ left-) 
+    //     gltf.scene.position.y = 0;				    //Position (y = up+, down-)
+    //     gltf.scene.position.z = 0;
+
+    //     scene.add( gltf.scene );
+    // });
+
     sun_lay3.rotation.y = 3;
 
     // ORBIT CONTROLS
@@ -237,6 +250,8 @@ function init(){
 
      window.requestAnimationFrame(animate);
 }
+
+
 
 
 function animate(){
@@ -261,8 +276,8 @@ function animate(){
 
     // render();
 
-    t -= 0.01;
-    moon.rotation.y += 0.003;
+    //t -= 0.01;
+    //moon.rotation.y += 0.003;
 
     moon.position.x = earth.position.x + 7.5*Math.cos(t) + 0;
     moon.position.z = earth.position.z + 7.5*Math.sin(t) + 0;
