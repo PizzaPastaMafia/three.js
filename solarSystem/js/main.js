@@ -1,19 +1,19 @@
 /*==============================================*\
-|                  Solar System                  |
-|                                                |
-|                       by                       |
-|                                                |
-|                Lorenzo Del Forno               |
-|                Emanuele Driussi                |
-|                  Andrea Mauro                  |
-|                 Denis Scavello                 |
-|                Matteo Tramontina               |
-|                     ------                     |
-|          3^IA Bearzi (UD), Stage 2021          |
+|        *         Solar System       *       *  |
+|   *                *            *              |
+|        *    *         by         *       *     |
+|  *              *      *      *           *    |
+|         *      Lorenzo Del Forno    *          |
+|    *           Emanuele Driussi           *    |
+|            *     Andrea Mauro                  |
+|     *           Denis Scavello       *         |
+|          *     Matteo Tramontina        *      |
+|      *        *     ------         *           |
+|  *       3^IA Bearzi (UD), Stage 2021       *  |
 \*==============================================*/
 
 
-let t, scene, camera, renderer, space, moon, sun_lay1, sun_lay2, sun_lay3, earth, earth_clouds, earth_ring, saturn, saturn_ring, jupiter, venus, venus_atmosphere, mercury, uranus, neptune;
+let mercury_mov, t, scene, camera, renderer, space, moon, sun_lay1, sun_lay2, sun_lay3, earth, earth_clouds, earth_ring, saturn, saturn_ring, jupiter, venus, venus_atmosphere, mercury, uranus, neptune;
 t=0;
 function init(){
 
@@ -90,6 +90,32 @@ function init(){
     scene.add(mercury);
 
     mercury.position.x = 110;
+
+    // ...
+    var arrayEll = [];
+    var arrayPla = [];
+    
+    THREE.EllipseCurve.prototype.realPoint = function ( t ) {
+        var radians = /*2 * Math.PI * t*/0;
+        return new THREE.Vector3( this.xRadius * Math.cos( radians ), 0, this.yRadius * Math.sin( radians ) );
+    };
+    
+    mercuryorbit = new THREE.EllipseCurve(0, 0, 110, 90, 0, Math.PI * 2, false, 0);
+    var mercurypoints = mercuryorbit.getPoints(50);
+    var mercuryEgeometry = new THREE.BufferGeometry().setFromPoints(mercurypoints);
+    var mercuryEmaterial = new THREE.LineBasicMaterial({color: 0x3399ff, linewidth: 0.3});
+    var mercuryellipse = new THREE.Line(mercuryEgeometry, mercuryEmaterial);
+    mercuryellipse.rotation.x -= 190.067;
+    scene.add(mercuryellipse);
+    arrayEll.push(mercuryellipse);
+
+
+    //var loader = new THREE.GLTFLoader();
+
+    var plut = 0;
+    mov = 0;
+
+    // ...
 
 
 
@@ -242,7 +268,7 @@ function init(){
 
     // ORBIT CONTROLS
     
-    camera.position.z=80;
+    camera.position.z=180;
     
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -250,8 +276,6 @@ function init(){
 
      window.requestAnimationFrame(animate);
 }
-
-
 
 
 function animate(){
@@ -274,10 +298,32 @@ function animate(){
     sun_lay2.rotation.y -= 0.00016;
     sun_lay3.rotation.y += 0.00012;
 
+    if(mercury != undefined){
+        var ps = mercuryorbit.realPoint(mercury);
+        
+        if(110*Math.cos(mov)>0){
+            mov += 0.015;
+        }else{
+            mov += 0.0055;
+        }
+        mercury.position.set(110*Math.cos(mov),0, 90*Math.sin(mov));
+        mercury.rotation.y -= 0.005;
+    }
+
+    
+    
+    // if(earth != undefined){
+    //     earth += 0.00000;
+    //     var ps = earthbit.realPoint(plut);
+    //     mov += 0.0055;
+    //     pluto.position.set(5*Math.cos(mov),0, 4*Math.sin(mov));
+    //     pluto.rotation.y -= 0.005;
+    // }
+
     // render();
 
-    //t -= 0.01;
-    //moon.rotation.y += 0.003;
+    t -= 0.01;
+    moon.rotation.y += 0.003;
 
     moon.position.x = earth.position.x + 7.5*Math.cos(t) + 0;
     moon.position.z = earth.position.z + 7.5*Math.sin(t) + 0;
