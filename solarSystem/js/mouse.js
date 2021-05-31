@@ -1,25 +1,31 @@
 const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2(); 
+    const mouse = new THREE.Vector2();
 
-function onMouseMove( event ) {
+    function onMouseMove( event ) {
         mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-        var i, prev; 
+    }
 
-        if(camera.position.z>50){
-                if(mouse.x == earth.position.x && mouse.y == earth.position.y) {
+function zoommare(event){
+    raycaster.setFromCamera( mouse, camera );
+    const intersects = raycaster.intersectObjects( scene.children );
 
-                        camera.position.set( mouse.x , mouse.y , 50 );
-                }
+    if ( intersects.length > 0 ) {
+        if(camera.position.z==150){
+            if(intersects.length==1){
+                camera.position.set( marte.position.x , marte.position.y , 30 );
+            }else if(intersects.length==2){
+                camera.position.set( 0 , 0 , 30 );
+            }
         }else{
-            camera.position.set( mouse.x , mouse.y , 75 );
-        } 
-} 
+            camera.position.set( xPrecedente , yPrecedente , 150 );
+        }
+    }
 
-function render() {
-        raycaster.setFromCamera( mouse, camera );
-        const intersects = raycaster.intersectObjects( scene.children );
-        renderer.render( scene, camera ); 
-} 
+    renderer.render( scene, camera );
+}
 
-window.addEventListener( "click", onMouseMove);
+var xPrecedente=camera.position.x;
+var yPrecedente=camera.position.y;
+window.addEventListener("mousemove", onMouseMove);
+window.addEventListener("dblclick",zoommare);
